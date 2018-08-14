@@ -1,0 +1,78 @@
+---
+title: "Power Analysis"
+author: "Iris Kemp"
+date: "August 14, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+## Background
+Three release groups (early, normal, late) from Glenwood - 100k fish per release group.
+Response variables: survival and age structure.
+
+Glenwood survival averages 0.55% (see below table).
+
+Age structure percentages for Glenwood returns (per Barry spreadsheet): 
+
+```{r}
+glenwood <- data_frame(Year = 2007:2012, 
+                       age2 = c(3.17, 8.5, 4.5, 6.14, 10, 5.8), 
+                       age3 = c(71.48, 56.21, 67.25, 73.25, 51.11, 61.96), 
+                       age4 = c(23.94, 35.29, 27.75, 20.61, 36.67, 31.52), 
+                       age5 = c(1.41, 0, 0.5, 0, 2.22, 0.72), 
+                       survival = c(0.71, 0.58, 0.74, 0.53, 0.19, 0.52))
+
+knitr::kable(glenwood)
+```
+
+Does age structure differ between males and females? Beckman suggested splitting by sex.
+
+<br>
+
+## Barry's back-of-the-envelope
+
+This is just a quick cut at the problem, and only one way to approach it, but might give a sense of power.  First, I summed the proportion at each age x age for each year. 
+
+| Year | Sum of (agexprop) |
+|------|-------------------|
+| 2007 |	3.236            |
+| 2008 |	3.268            |
+| 2009 |	3.243            |
+| 2010 |	3.145            |
+| 2011 |	3.311            |
+| 2012 |	3.272            |
+
+mean	3.246
+
+stdev	0.056
+
+Then you can get a mean and stdev among years.  If you were to conduct an experiment with just two treatments (for simplicity) that ran for 6 years and had the following effect
+
+| Age | prop(before) | prop(after) |
+|-----|--------------|-------------|
+| 2	  | 0.06         | 0.03        |
+| 3	  | 0.64	       | 0.33        |
+| 4	  | 0.29	       | 0.54        |
+| 5	  | 0.01	       | 0.10        |
+| Mean|	3.25	       | 3.71        |
+
+
+Here's a quick power analysis for two groups and 6 years with an effect size of 3.71-3.25 = 0.46; using the stdev from existing data.
+
+There are problems with this approach with a time series, and I'm sure other problems with it, but...
+
+pwr.1way(k=2, n=6, alpha=0.05, f = 0.46,  sigma = 0.056)
+
+     Balanced one-way analysis of variance power calculation 
+
+              k = 2
+              n = 6
+    effect.size = 0.46
+      sig.level = 0.05
+          power = 0.3026356
+
+NOTE: n is number in each group, total sample = 12, power = 0.302635637783944
