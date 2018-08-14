@@ -8,34 +8,42 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
+library(pwr)
 ```
 
-## Background
-Three release groups (early, normal, late) from Glenwood - 100k fish per release group.
-Response variables: survival and age structure.
+## Background for Pam
+We're putting together a proposal for an experimental release study. Basically, we need to know whether we're actually going to be able to measure a statistically significant change in age structure and survival across the study groups.
+
+The study set up is:
+
+- Three release groups (early, normal, late) from our Glenwood facility.
+- 100k fish per release group.
+- Response variables: survival and age structure.
 
 Glenwood survival averages 0.55% (see below table).
 
-Age structure percentages for Glenwood returns (per Barry spreadsheet): 
+Age structure proportions for Glenwood returns: 
 
 ```{r}
 glenwood <- data_frame(Year = 2007:2012, 
-                       age2 = c(3.17, 8.5, 4.5, 6.14, 10, 5.8), 
-                       age3 = c(71.48, 56.21, 67.25, 73.25, 51.11, 61.96), 
-                       age4 = c(23.94, 35.29, 27.75, 20.61, 36.67, 31.52), 
-                       age5 = c(1.41, 0, 0.5, 0, 2.22, 0.72), 
+                       age2 = c(.0317, .085, .045, .0614, .10, .058), 
+                       age3 = c(.7148, .5621, .6725, .7325, .5111, .6196), 
+                       age4 = c(.2394, .3529, .2775, .2061, .3667, .3152), 
+                       age5 = c(.0141, 0, .005, 0, .0222, .0072), 
                        survival = c(0.71, 0.58, 0.74, 0.53, 0.19, 0.52))
 
 knitr::kable(glenwood)
 ```
 
-Does age structure differ between males and females? Beckman suggested splitting by sex.
+(Q to follow up on: Does age structure differ between males and females? Beckman suggested splitting by sex. Assume no sex difference for now.)
 
 <br>
 
-## Barry's back-of-the-envelope
+## Power calculations
 
-This is just a quick cut at the problem, and only one way to approach it, but might give a sense of power.  First, I summed the proportion at each age x age for each year. 
+This is from one of our collaborators and I don't actually understand what he's doing here. 
+
+> This is just a quick cut at the problem, and only one way to approach it, but might give a sense of power.  First, I summed the proportion at each age x age for each year. 
 
 | Year | Sum of (agexprop) |
 |------|-------------------|
@@ -50,7 +58,7 @@ mean	3.246
 
 stdev	0.056
 
-Then you can get a mean and stdev among years.  If you were to conduct an experiment with just two treatments (for simplicity) that ran for 6 years and had the following effect
+> Then you can get a mean and stdev among years.  If you were to conduct an experiment with just two treatments (for simplicity) that ran for 6 years and had the following effect
 
 | Age | prop(before) | prop(after) |
 |-----|--------------|-------------|
@@ -61,11 +69,11 @@ Then you can get a mean and stdev among years.  If you were to conduct an experi
 | Mean|	3.25	       | 3.71        |
 
 
-Here's a quick power analysis for two groups and 6 years with an effect size of 3.71-3.25 = 0.46; using the stdev from existing data.
+> Here's a quick power analysis for two groups and 6 years with an effect size of 3.71-3.25 = 0.46; using the stdev from existing data.
 
-There are problems with this approach with a time series, and I'm sure other problems with it, but...
+> There are problems with this approach with a time series, and I'm sure other problems with it, but...
 
-pwr.1way(k=2, n=6, alpha=0.05, f = 0.46,  sigma = 0.056)
+> pwr.1way(k=2, n=6, alpha=0.05, f = 0.46,  sigma = 0.056)
 
      Balanced one-way analysis of variance power calculation 
 
@@ -75,4 +83,30 @@ pwr.1way(k=2, n=6, alpha=0.05, f = 0.46,  sigma = 0.056)
       sig.level = 0.05
           power = 0.3026356
 
-NOTE: n is number in each group, total sample = 12, power = 0.302635637783944
+> NOTE: n is number in each group, total sample = 12, power = 0.302635637783944
+
+<br> 
+
+Would a chi-squared goodness of fit test be more appropriate?
+
+We can average age structure over 2007-2012 and use that as null age structure (as above).
+
+We have no idea how age structure might change with the three treatments. Is there some way to simulate a bunch of different age structures? Maybe bounded by the observed data? 
+
+Assume sample size in each group is 150 adult returns. I don't know offhand how to do a chi-squared test for a null and two treatment groups so we'll just do null vs. alt for now. For alt age structure, we'll use year 2010 since it's the closest to null.
+
+```{r}
+null <- glenwood %>%
+  select(., -Year, -survival) %>%
+  summarise_all(mean) %>% 
+  unlist(., use.names = FALSE)
+
+y2010 <- glenwood[4,2:5] %>% unlist(., use.names = FALSE)
+
+pwr.chisq.test(w = ES.w1(null, y2010), N = 150, df = (4-1), sig.level = 0.05)
+```
+
+We'd have about a 60% chance of rejecting null (i.e., concluding there was significant difference between age structures). 
+
+
+

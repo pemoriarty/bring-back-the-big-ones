@@ -129,11 +129,17 @@ $(document).ready(function () {
 </div>
 
 
-<div id="background" class="section level2">
-<h2>Background</h2>
-<p>Three release groups (early, normal, late) from Glenwood - 100k fish per release group. Response variables: survival and age structure.</p>
+<div id="background-for-pam" class="section level2">
+<h2>Background for Pam</h2>
+<p>We’re putting together a proposal for an experimental release study. Basically, we need to know whether we’re actually going to be able to measure a statistically significant change in age structure and survival across the study groups.</p>
+<p>The study set up is:</p>
+<ul>
+<li>Three release groups (early, normal, late) from our Glenwood facility.</li>
+<li>100k fish per release group.</li>
+<li>Response variables: survival and age structure.</li>
+</ul>
 <p>Glenwood survival averages 0.55% (see below table).</p>
-<p>Age structure percentages for Glenwood returns (per Barry spreadsheet):</p>
+<p>Age structure proportions for Glenwood returns:</p>
 <table>
 <thead>
 <tr class="header">
@@ -148,60 +154,63 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td align="right">2007</td>
-<td align="right">3.17</td>
-<td align="right">71.48</td>
-<td align="right">23.94</td>
-<td align="right">1.41</td>
+<td align="right">0.0317</td>
+<td align="right">0.7148</td>
+<td align="right">0.2394</td>
+<td align="right">0.0141</td>
 <td align="right">0.71</td>
 </tr>
 <tr class="even">
 <td align="right">2008</td>
-<td align="right">8.50</td>
-<td align="right">56.21</td>
-<td align="right">35.29</td>
-<td align="right">0.00</td>
+<td align="right">0.0850</td>
+<td align="right">0.5621</td>
+<td align="right">0.3529</td>
+<td align="right">0.0000</td>
 <td align="right">0.58</td>
 </tr>
 <tr class="odd">
 <td align="right">2009</td>
-<td align="right">4.50</td>
-<td align="right">67.25</td>
-<td align="right">27.75</td>
-<td align="right">0.50</td>
+<td align="right">0.0450</td>
+<td align="right">0.6725</td>
+<td align="right">0.2775</td>
+<td align="right">0.0050</td>
 <td align="right">0.74</td>
 </tr>
 <tr class="even">
 <td align="right">2010</td>
-<td align="right">6.14</td>
-<td align="right">73.25</td>
-<td align="right">20.61</td>
-<td align="right">0.00</td>
+<td align="right">0.0614</td>
+<td align="right">0.7325</td>
+<td align="right">0.2061</td>
+<td align="right">0.0000</td>
 <td align="right">0.53</td>
 </tr>
 <tr class="odd">
 <td align="right">2011</td>
-<td align="right">10.00</td>
-<td align="right">51.11</td>
-<td align="right">36.67</td>
-<td align="right">2.22</td>
+<td align="right">0.1000</td>
+<td align="right">0.5111</td>
+<td align="right">0.3667</td>
+<td align="right">0.0222</td>
 <td align="right">0.19</td>
 </tr>
 <tr class="even">
 <td align="right">2012</td>
-<td align="right">5.80</td>
-<td align="right">61.96</td>
-<td align="right">31.52</td>
-<td align="right">0.72</td>
+<td align="right">0.0580</td>
+<td align="right">0.6196</td>
+<td align="right">0.3152</td>
+<td align="right">0.0072</td>
 <td align="right">0.52</td>
 </tr>
 </tbody>
 </table>
-<p>Does age structure differ between males and females? Beckman suggested splitting by sex.</p>
+<p>(Q to follow up on: Does age structure differ between males and females? Beckman suggested splitting by sex. Assume no sex difference for now.)</p>
 <p><br></p>
 </div>
-<div id="barrys-back-of-the-envelope" class="section level2">
-<h2>Barry’s back-of-the-envelope</h2>
+<div id="power-calculations" class="section level2">
+<h2>Power calculations</h2>
+<p>This is from one of our collaborators and I don’t actually understand what he’s doing here.</p>
+<blockquote>
 <p>This is just a quick cut at the problem, and only one way to approach it, but might give a sense of power. First, I summed the proportion at each age x age for each year.</p>
+</blockquote>
 <table>
 <thead>
 <tr class="header">
@@ -238,7 +247,9 @@ $(document).ready(function () {
 </table>
 <p>mean 3.246</p>
 <p>stdev 0.056</p>
+<blockquote>
 <p>Then you can get a mean and stdev among years. If you were to conduct an experiment with just two treatments (for simplicity) that ran for 6 years and had the following effect</p>
+</blockquote>
 <table>
 <thead>
 <tr class="header">
@@ -275,9 +286,15 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
+<blockquote>
 <p>Here’s a quick power analysis for two groups and 6 years with an effect size of 3.71-3.25 = 0.46; using the stdev from existing data.</p>
+</blockquote>
+<blockquote>
 <p>There are problems with this approach with a time series, and I’m sure other problems with it, but…</p>
+</blockquote>
+<blockquote>
 <p>pwr.1way(k=2, n=6, alpha=0.05, f = 0.46, sigma = 0.056)</p>
+</blockquote>
 <pre><code> Balanced one-way analysis of variance power calculation 
 
           k = 2
@@ -285,7 +302,25 @@ $(document).ready(function () {
 effect.size = 0.46
   sig.level = 0.05
       power = 0.3026356</code></pre>
+<blockquote>
 <p>NOTE: n is number in each group, total sample = 12, power = 0.302635637783944</p>
+</blockquote>
+<p><br></p>
+<p>Would a chi-squared goodness of fit test be more appropriate?</p>
+<p>We can average age structure over 2007-2012 and use that as null age structure (as above).</p>
+<p>We have no idea how age structure might change with the three treatments. Is there some way to simulate a bunch of different age structures? Maybe bounded by the observed data?</p>
+<p>Assume sample size in each group is 150 adult returns. I don’t know offhand how to do a chi-squared test for a null and two treatment groups so we’ll just do null vs. alt for now. For alt age structure, we’ll use year 2010 since it’s the closest to null.</p>
+<pre><code>## 
+##      Chi squared power calculation 
+## 
+##               w = 0.2207669
+##               N = 150
+##              df = 3
+##       sig.level = 0.05
+##           power = 0.6104158
+## 
+## NOTE: N is the number of observations</code></pre>
+<p>We’d have about a 60% chance of rejecting null (i.e., concluding there was significant difference between age structures).</p>
 </div>
 
 
