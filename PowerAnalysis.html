@@ -207,7 +207,7 @@ $(document).ready(function () {
 </div>
 <div id="power-calculations" class="section level2">
 <h2>Power calculations</h2>
-<p>This is from one of our collaborators and I don’t actually understand what he’s doing here.</p>
+<p>This is from one of our collaborators and I don’t actually understand why he’s doing what he’s doing here. He’s calculating average age of return based on the porportions of each age class that returns, and then using that single value to represent the returns and replicating over two groups and six years. But that doesn’t really address whether the age structure (i.e., the distribution) is different, right?</p>
 <blockquote>
 <p>This is just a quick cut at the problem, and only one way to approach it, but might give a sense of power. First, I summed the proportion at each age x age for each year.</p>
 </blockquote>
@@ -307,8 +307,7 @@ effect.size = 0.46
 </blockquote>
 <p><br></p>
 <p>Would a chi-squared goodness of fit test be more appropriate?</p>
-<p>We can average age structure over 2007-2012 and use that as null age structure (as above).</p>
-<p>We have no idea how age structure might change with the three treatments. Is there some way to simulate a bunch of different age structures? Maybe bounded by the observed data?</p>
+<p>We can average age structure over 2007-2012 and use that as null age structure (as Barry did above).</p>
 <p>Assume sample size in each group is 150 adult returns. I don’t know offhand how to do a chi-squared test for a null and two treatment groups so we’ll just do null vs. alt for now. For alt age structure, we’ll use year 2010 since it’s the closest to null.</p>
 <pre><code>## 
 ##      Chi squared power calculation 
@@ -320,7 +319,13 @@ effect.size = 0.46
 ##           power = 0.6104158
 ## 
 ## NOTE: N is the number of observations</code></pre>
-<p>We’d have about a 60% chance of rejecting null (i.e., concluding there was significant difference between age structures).</p>
+<p>So in this example we’d have about a 60% chance of rejecting null (i.e., concluding there was significant difference between age structures). This only represents two treatment groups and one year of data though.</p>
+<p>Complicating factors:</p>
+<ul>
+<li><p>We have no idea how age structure might change with the three treatments. Is there some way to simulate a bunch of different age structures? Maybe bounded by the observed data?</p></li>
+<li><p>Consider observed survival data - ranges from 0.19% to 0.74%. So in a bad year, if we release 100k fish, we might only get 190 fish back. Assuming equal male/female ratios (not a particularly great assumption - it’s probably more like 60:40 or even 70:30 depending on year), that’d be a sample size of 95.</p></li>
+<li><p>If survival varies wildly among treatment groups, we might end up with three totally different sample sizes of returns.</p></li>
+</ul>
 </div>
 
 
